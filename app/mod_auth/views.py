@@ -1,17 +1,16 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for, jsonify, make_response
-from app.users.models import Users, UsersSchema
+from app.mod_auth.models import Users, UsersSchema
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_restful import Resource, Api
 import flask_restful
 import jwt
-from jwt import DecodeError, ExpiredSignature
 from config import SECRET_KEY
 from datetime import datetime, timedelta
 from functools import wraps
 from flask import g
 
 
-users = Blueprint('users', __name__)
+mod_auth = Blueprint('mod_auth', __name__)
 # http://marshmallow.readthedocs.org/en/latest/quickstart.html#declaring-schemas
 schema = UsersSchema()
 
@@ -29,6 +28,7 @@ def create_token(user):
 
 def parse_token(req):
     token = req.headers.get('Authorization').split()[1]
+    print(token)
     return jwt.decode(token, SECRET_KEY, algorithms='HS256')
 
 # Login decorator function
@@ -44,11 +44,11 @@ def login_required(f):
 
         try:
             payload = parse_token(request)
-        except DecodeError:
+        except jwt.DecodeError:
             response = jsonify(message='Token is invalid')
             response.status_code = 401
             return response
-        except ExpiredSignature:
+        except jwt.ExpiredSignature:
             response = jsonify(message='Token has expired')
             response.status_code = 401
             return response
@@ -61,7 +61,7 @@ def login_required(f):
 
 # JWT AUTh process end
 
-api = Api(users)
+api = Api(mod_auth)
 
 
 class Auth(Resource):
@@ -92,7 +92,8 @@ api.add_resource(Auth, '/login')
 class Register(Resource):
 
     def post(self):
-        data = request.get_json()
+        data = request.get_json(force=True)
+        print(data)
 
         username = data['username']
         email = data['email']
@@ -100,7 +101,11 @@ class Register(Resource):
 
         new_user = Users(email, username, generate_password_hash(password))
 
-        Users.add(new_user)
+        print(new_user.add(new_user))
+
+        return jsonify({"message": "User:{0} succesfully added".format(new_user.name)})
+
+api.add_resource(Register, "/register")
 
 
 

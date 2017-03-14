@@ -8,17 +8,18 @@ db = SQLAlchemy()
 
 
 class Users(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     email = db.Column(db.String(250), unique=True, nullable=False)
     name = db.Column(db.String(250), nullable=False)
     password = db.Column(db.String(250), nullable=False)
     is_enabled = db.Column(db.Boolean(), nullable=False,
                            server_default='False')
 
-    def __init__(self, email, name, password):
+    def __init__(self, email, name, password, is_enabled=False):
         self.email = email
         self.name = name
         self.password = password
+        self.is_enabled = is_enabled
 
     def add(self, user):
         db.session.add(user)
@@ -41,7 +42,7 @@ class UsersSchema(Schema):
     name = fields.String(validate=not_blank)
     email = fields.Email()
     # Need to make this field
-    not blank on add
+    #not blank on add
     password = fields.String()
     is_active = fields.Boolean(validate=not_blank)
     role = fields.String()
@@ -57,3 +58,6 @@ def session_commit():
         db.session.rollback()
         reason = str(e)
         return reason
+
+if __name__ == "__main__":
+    db.create_all()
