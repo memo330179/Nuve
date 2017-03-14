@@ -6,11 +6,6 @@ db = SQLAlchemy()
 
 # Relationships
 
-
-
-
-
-
 class Series(db.Model):
     title = db.Column(db.String(250))
     overview = db.Column(db.String(250), nullable=True)
@@ -26,7 +21,7 @@ class SerieSchema(Schema):
 
     not_blank = validate.Length(min=1, error='Field cannot be blank')
     title = fields.String(validate=not_blank)
-    overview = fields.string()
+    overview = db.Column(db.TEXT())
     # Need to make this field
     #not blank on add
     series_art = fields.String()
@@ -39,6 +34,24 @@ class Tags(db.Model):
 
 class Season(db.model):
     number = db.Column(db.Integer)
+    overview = db.Column(db.TEXT())
+    art = db.Column(db.String())
+
+class Media_File(db.Model):
+    title = db.Column(db.String(250))
+    path = db.Column(db.String(250))
+    slug = db.Column(db.String(250))
+    image_path = db.Column(db.String(250))
+    overview = db.Column(db.TEXT())
+
+class Episode(Media_File):
+    Season = db.Column(db.Integer, db.ForeignKey(Season))
+
+
+class Movie(Media_File):
+    release_date = db.Column(db.Date)
+    runtime = db.Column(db.Integer)
+
 
 
 def session_commit():
