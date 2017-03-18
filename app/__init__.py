@@ -14,7 +14,7 @@ def create_app(config_filename):
 
     from app.mod_auth.views import mod_auth
     app.register_blueprint(mod_auth, url_prefix='/api')
-    from app.api.test import api
-    app.register_blueprint(api, url_prefix='/test')
+    from app.api.views import media_api
+    app.register_blueprint(media_api, url_prefix='/media_api')
 
     return app
