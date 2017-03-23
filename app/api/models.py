@@ -66,8 +66,8 @@ class Media_File(db.Model):
 class Episode(Media_File):
     __table_args__ = {'extend_existing': True}
     __mapper_args__ = {'polymorphic_identity': 'Episode'}
-    Season = db.Column(db.Integer, db.ForeignKey(Season.id))
-
+    season = db.Column(db.Integer, db.ForeignKey(Season.id))
+    episode_number = db.Column(db.Integer)
 
 class Movie(Media_File):
     __table_args__ = {'extend_existing': True}
