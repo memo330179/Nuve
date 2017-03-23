@@ -42,12 +42,12 @@ def get_movie_details(movie_id):
 
 def search_show(show_title):
     search = tmdb.Search()
-    return search.TV(show_title)
+    return search.TV(query=show_title)
 
 def get_show_details(show_id)
     show = tmdb.TV(show_id)
     response = show.info()
-    return show()
+    return show
 
 def get_season_info(show_id, season_number):
     season = tmdb.TV_Seasons(show_id, season_number)
@@ -58,4 +58,3 @@ def get_episode_info(show_id, season_number, episode_number):
     episode = tmdb.TV_Episodes(show_id, season_number, episode_number)
     response = episode.info()
     return episode
-
