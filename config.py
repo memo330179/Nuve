@@ -8,4 +8,6 @@ SQLALCHEMY_ECHO = True
 SECRET_KEY = "s0me random string"
 basedir = os.path.abspath(os.path.dirname(__file__))
 
+UPLOAD_FOLDER = 'uploads'
+
 SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'db.sqlite')
