@@ -12,11 +12,18 @@ class Series(db.Model):
     title = db.Column(db.String(250))
     overview = db.Column(db.String(250), nullable=True)
     series_art = db.Column(db.String(250), nullable=True)
+    slug = db.Column(db.String(250))
 
     def __init__(self, title, overview, series_art):
         self.title = title
         self.overview = overview
         self.series_art = series_art
+        self.slug = create_slug(self.title)
+
+    def create_slug(self, title):
+        return slugify(title)
+
+
 
 
 class SerieSchema(Schema):
@@ -40,6 +47,8 @@ class Season(db.Model):
     number = db.Column(db.Integer)
     overview = db.Column(db.TEXT())
     art = db.Column(db.String())
+    series = db.Column(db.Integer, db.ForeignKey(Series.id))
+
 
 class Media_File(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
