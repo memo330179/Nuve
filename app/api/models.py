@@ -9,12 +9,14 @@ db = SQLAlchemy()
 
 class Series(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    tmdb_id = db.Column(db.Integer)
     title = db.Column(db.String(250))
     overview = db.Column(db.String(250), nullable=True)
     series_art = db.Column(db.String(250), nullable=True)
     slug = db.Column(db.String(250))
 
-    def __init__(self, title, overview, series_art):
+    def __init__(self, tmdb_id, title, overview, series_art):
+        self.tmdb_id = tmdb_id
         self.title = title
         self.overview = overview
         self.series_art = series_art
