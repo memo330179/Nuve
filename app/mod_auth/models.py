@@ -1,8 +1,8 @@
 from flask.ext.sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import SQLAlchemyError
 from marshmallow import Schema, fields, validate
-
-db = SQLAlchemy()
+from app.db_base import db
+from werkzeug.security import generate_password_hash
 
 # Relationships
 
@@ -11,14 +11,14 @@ class Users(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     email = db.Column(db.String(250), unique=True, nullable=False)
     name = db.Column(db.String(250), nullable=False)
-    password = db.Column(db.String(250), nullable=False)
+    password = db.Column(db.String(), nullable=False)
     is_enabled = db.Column(db.Boolean(), nullable=False,
                            server_default='False')
 
     def __init__(self, email, name, password, is_enabled=False):
         self.email = email
         self.name = name
-        self.password = password
+        self.password = generate_password_hash(password)
         self.is_enabled = is_enabled
 
     def add(self, user):

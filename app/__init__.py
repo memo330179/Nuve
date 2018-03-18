@@ -7,7 +7,7 @@ def create_app(config_filename):
     app.config.from_object(config_filename)
 
     # Init SQLAlchemy
-    from app.mod_auth.models import db
+    from app.db_base import db
     db.init_app(app)
 
     # Blueprints
@@ -16,5 +16,7 @@ def create_app(config_filename):
     app.register_blueprint(mod_auth, url_prefix='/api')
     from app.api.views import media_api
     app.register_blueprint(media_api, url_prefix='/media_api')
+    from app.frontend.views import frontend
+    app.register_blueprint(frontend, url_prefix='/frontend')
 
     return app

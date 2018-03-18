@@ -77,6 +77,7 @@ class Auth(Resource):
                 jsonify({"message": "invalid username/password"}))
             response.status_code = 401
             return response
+        # import pdb; pdb.set_trace();
         if check_password_hash(user.password, password):
 
             token = create_token(user)
@@ -99,7 +100,7 @@ class Register(Resource):
         email = data['email']
         password = data['password']
 
-        new_user = Users(email, username, generate_password_hash(password))
+        new_user = Users(email, username, password)
 
         print(new_user.add(new_user))
 

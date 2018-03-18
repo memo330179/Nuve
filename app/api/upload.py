@@ -1,5 +1,5 @@
 from werkzeug.utils import secure_filename
-from config import upload_folder
+from config import UPLOAD_FOLDER
 allowed_extensions = ['mp4', 'mkv'] #todo: need the full list of extensions
 
 def allowed_file(filename):

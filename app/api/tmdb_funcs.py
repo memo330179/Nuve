@@ -1,9 +1,9 @@
 import guessit
 import tmdbsimple as tmdb
-from urllib2 import HTTPError
+from urllib.error import HTTPError
 
 try:
-    from pi_drive_main import secrets
+    from app import secrets
 except ImportError:
     print("Trying to get API from Settings")
     from django.conf import settings
@@ -11,7 +11,7 @@ except ImportError:
 
 try:
     tmdb.API_KEY = secrets.TMDB_API_KEY
-    print("using API KEY", tmdb.API_KEY)
+    print(("using API KEY", tmdb.API_KEY))
     movie = tmdb.Movies(603) #the matrix
     movie.info()
 except HTTPError:
@@ -42,9 +42,9 @@ def get_movie_details(movie_id):
 
 def search_show(show_title):
     search = tmdb.Search()
-    return search.TV(query=show_title)
+    return search.tv(query=show_title)
 
-def get_show_details(show_id)
+def get_show_details(show_id):
     show = tmdb.TV(show_id)
     response = show.info()
     return show

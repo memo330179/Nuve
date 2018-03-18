@@ -3,6 +3,9 @@ from flask_restful import Resource, Api
 import flask_restful
 from app.mod_auth.views import login_required
 from guessit import guessit
+from app.api.upload import upload_movie, upload_episode
+from werkzeug.utils import secure_filename
+
 
 media_api = Blueprint('media_api', __name__)
 
@@ -22,13 +25,10 @@ def upload_media(media_type):
         if guessed_info.type == "Movie":
             upload_movie(media_file)
         elif guessed_info.type == "Episode":
-            upload_tv(media_file, guessed_info)
+            upload_episode(media_file, guessed_info)
 
 
 rest_api = Api(media_api)
-# Adding the login decorator to the Resource class
-class Resource(flask_restful.Resource):
-    method_decorators = [login_required]
 
 
 # Any API class now inheriting the Resource class will need Authentication

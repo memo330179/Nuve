@@ -2,8 +2,7 @@ from flask.ext.sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import SQLAlchemyError
 from marshmallow import Schema, fields, validate
 from slugify import slugify
-
-db = SQLAlchemy()
+from app.db_base import db
 
 # Relationships
 
@@ -50,10 +49,18 @@ class Season(db.Model):
     overview = db.Column(db.TEXT())
     art = db.Column(db.String())
     series = db.Column(db.Integer, db.ForeignKey(Series.id))
+    
+    def __init__(self, number, overview, art, series):
+        self.number = number 
+        self.overview = overview
+        self.art = art
+        self.series = series
+        
 
 
 class Media_File(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    tmdb_id = db.Column(db.Integer)
     title = db.Column(db.String(250))
     path = db.Column(db.String(250))
     slug = db.Column(db.String(250))
@@ -63,15 +70,6 @@ class Media_File(db.Model):
 
     __mapper_args__ = {'polymorphic_on': media_type}
 
-    def __init__(self, title, path, image_path, overview):
-        self.title = title
-        self.path = path
-        self.slug = self.create_slug(title)
-        self.image_path = image_path
-        self.overview = overview
-
-    def create_slug(self, title):
-        return slugify(title)
 
 
 class Episode(Media_File):
@@ -79,12 +77,38 @@ class Episode(Media_File):
     __mapper_args__ = {'polymorphic_identity': 'Episode'}
     season = db.Column(db.Integer, db.ForeignKey(Season.id))
     episode_number = db.Column(db.Integer)
+    
+    def __init__(self, title, path, image_path, overview, season, episode_number, tmdb_id):
+        self.title = title
+        self.path = path
+        self.slug = self.create_slug(title)
+        self.image_path = image_path
+        self.overview = overview
+        self.season = season
+        self.episode_number = episode_number
+        self.tmdb_id = tmdb_id
+
+    def create_slug(self, title):
+        return slugify(title)
 
 class Movie(Media_File):
     __table_args__ = {'extend_existing': True}
     __mapper_args__ = {'polymorphic_identity': 'Movie'}
     release_date = db.Column(db.Date)
     runtime = db.Column(db.Integer)
+    
+    def __init__(self, title, path, image_path, overview, release_date, runtime, tmdb_id):
+        self.title = title
+        self.path = path
+        self.slug = self.create_slug(title)
+        self.image_path = image_path
+        self.overview = overview
+        self.release_date = release_date
+        self.runtime = runtime
+        self.tmdb_id = tmdb_id
+
+    def create_slug(self, title):
+        return slugify(title)
 
 
 

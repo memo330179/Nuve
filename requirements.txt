@@ -3,7 +3,6 @@ appdirs==1.4.2
 babelfish==0.5.5
 cffi==1.9.1
 click==6.7
-cryptography==1.7.2
 Flask==0.12
 Flask-RESTful==0.3.5
 Flask-SQLAlchemy==2.2
