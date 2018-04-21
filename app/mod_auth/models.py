@@ -1,3 +1,5 @@
+# This handles the definition for the models used in authentication. Just the user models.
+
 from flask.ext.sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import SQLAlchemyError
 from marshmallow import Schema, fields, validate

@@ -19,7 +19,7 @@ class Series(db.Model):
         self.title = title
         self.overview = overview
         self.series_art = series_art
-        self.slug = create_slug(self.title)
+        self.slug = self.create_slug(self.title)
 
     def create_slug(self, title):
         return slugify(title)
@@ -27,7 +27,7 @@ class Series(db.Model):
 
 
 
-class SerieSchema(Schema):
+class SeriesSchema(Schema):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     not_blank = validate.Length(min=1, error='Field cannot be blank')
     title = fields.String(validate=not_blank)
@@ -37,7 +37,7 @@ class SerieSchema(Schema):
     series_art = fields.String()
 
     class Meta:
-        fields = ('title', 'overview', 'series_art')
+        fields = ('id', 'title', 'overview', 'series_art')
 
 class Tags(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -56,14 +56,25 @@ class Season(db.Model):
         self.art = art
         self.series = series
         
+class SeasonSchema(Schema):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    not_blank = validate.Length(min=1, error='Field cannot be blank')
+    number = fields.Integer(validate=not_blank)
+    overview = db.Column(db.TEXT())
+    # Need to make this field
+    #not blank on add
+    art = fields.String()
+
+    class Meta:
+        fields = ('id', 'number', 'overview', 'art')
+        
 
 
 class Media_File(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    tmdb_id = db.Column(db.Integer)
     title = db.Column(db.String(250))
-    path = db.Column(db.String(250))
     slug = db.Column(db.String(250))
+    path = db.Column(db.String(250))
     image_path = db.Column(db.String(250))
     overview = db.Column(db.TEXT())
     media_type = db.Column(db.String(250))
@@ -80,8 +91,8 @@ class Episode(Media_File):
     
     def __init__(self, title, path, image_path, overview, season, episode_number, tmdb_id):
         self.title = title
-        self.path = path
         self.slug = self.create_slug(title)
+        self.path = path
         self.image_path = image_path
         self.overview = overview
         self.season = season
@@ -90,6 +101,20 @@ class Episode(Media_File):
 
     def create_slug(self, title):
         return slugify(title)
+        
+class EpisodeSchema(Schema):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    not_blank = validate.Length(min=1, error='Field cannot be blank')
+    title = fields.String(validate=not_blank)
+    path = fields.String(validate=not_blank)
+    overview = fields.String()
+    episode_number = fields.Integer()
+    # Need to make this field
+    #not blank on add
+    image_path = fields.String()
+
+    class Meta:
+        fields = ('title','path', 'overview', 'episode_number', 'image_path')
 
 class Movie(Media_File):
     __table_args__ = {'extend_existing': True}
@@ -109,8 +134,20 @@ class Movie(Media_File):
 
     def create_slug(self, title):
         return slugify(title)
+        
+class MovieSchema(Schema):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    not_blank = validate.Length(min=1, error='Field cannot be blank')
+    title = fields.String(validate=not_blank)
+    path = fields.String(validate=not_blank)
+    overview = db.Column(db.TEXT())
+    episode_number = fields.Integer()
+    # Need to make this field
+    #not blank on add
+    image_path = fields.String()
 
-
+    class Meta:
+        fields = ('title','path', 'overview', 'episode_number', 'image_path')
 
 def session_commit():
     try:

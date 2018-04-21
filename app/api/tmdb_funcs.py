@@ -35,10 +35,10 @@ def search_movie(movie_name):
     search = tmdb.Search()
     return search.movie(query=movie_name)
 
-def get_movie_details(movie_id):
+def get_movie_info(movie_id):
     movie = tmdb.Movies(movie_id)
     response = movie.info()
-    return movie
+    return response
 
 def search_show(show_title):
     search = tmdb.Search()
@@ -47,14 +47,14 @@ def search_show(show_title):
 def get_show_details(show_id):
     show = tmdb.TV(show_id)
     response = show.info()
-    return show
+    return response
 
 def get_season_info(show_id, season_number):
     season = tmdb.TV_Seasons(show_id, season_number)
     response = season.info()
-    return season
+    return response
 
 def get_episode_info(show_id, season_number, episode_number):
     episode = tmdb.TV_Episodes(show_id, season_number, episode_number)
     response = episode.info()
-    return episode
+    return response

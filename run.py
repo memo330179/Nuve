@@ -1,3 +1,5 @@
+# This is the application creator to run the server
+# This runs baed on the configuration files.
 from app import create_app
 
 app = create_app('config')

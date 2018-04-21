@@ -1,3 +1,6 @@
+# This file creates the login, register, and a test api test point
+# the authentication type for this is jwt a json token
+
 from flask import Blueprint, render_template, request, flash, redirect, url_for, jsonify, make_response
 from app.mod_auth.models import Users, UsersSchema
 from werkzeug.security import generate_password_hash, check_password_hash

@@ -1,3 +1,5 @@
+# Defines the app creator to use with blueprint
+
 from flask import Flask
 
 
