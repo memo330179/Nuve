@@ -114,7 +114,7 @@ class EpisodeSchema(Schema):
     image_path = fields.String()
 
     class Meta:
-        fields = ('title','path', 'overview', 'episode_number', 'image_path')
+        fields = ('id', 'title','path', 'overview', 'episode_number', 'image_path')
 
 class Movie(Media_File):
     __table_args__ = {'extend_existing': True}
@@ -147,7 +147,7 @@ class MovieSchema(Schema):
     image_path = fields.String()
 
     class Meta:
-        fields = ('title','path', 'overview', 'episode_number', 'image_path')
+        fields = ('id', 'title','path', 'overview', 'episode_number', 'image_path')
 
 def session_commit():
     try:

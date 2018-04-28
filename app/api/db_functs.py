@@ -3,6 +3,8 @@ import os
 from .models import *
 from slugify import slugify
 from sqlalchemy import and_
+from datetime import datetime
+
 
 def add_episode_to_db(filepath, guessed_info):
    # search for tv show
@@ -38,14 +40,14 @@ def add_episode_to_db(filepath, guessed_info):
    
 def add_movie_to_db(filepath, guessed_info):
    # search for tv show
-  # import pdb; pdb.set_trace()
+    
   
     if not movie_exists(filepath):
         tmdb_movie = get_movie_info(search_movie(guessed_info['title'])['results'][0]['id'])
-        import pdb; pdb.set_trace()
-        movie = Movie(tmdb_movie['title'], filepath, tmdb_movie['poster_path'], tmdb_movie['overview'], tmdb_movie['release_date'],tmdb_movie['runtime'], tmdb_movie['id'])
+        movie = Movie(tmdb_movie['title'], filepath, tmdb_movie['poster_path'], tmdb_movie['overview'], datetime.strptime(tmdb_movie['release_date'],"%Y-%m-%d"),tmdb_movie['runtime'], tmdb_movie['id'])
         db.session.add(movie)
-    session_commit()
+        session_commit()
+        
 
 def series_exists(series_id):
     series = Series.query.filter_by(id=series_id).scalar()
@@ -69,8 +71,8 @@ def episode_exists(season_id, episode_number):
   return season_exists is not None
   
 def movie_exists(filepath):
-  movie_exists = (Movie
+  exists = (Movie
                      .query
                      .filter(Movie.path == filepath)
                      .scalar())
-  return movie_exists is not None
+  return exists is not None

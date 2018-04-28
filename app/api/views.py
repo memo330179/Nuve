@@ -15,17 +15,19 @@ media_api = Blueprint('media_api', __name__, static_folder='uploads')
 series_schema = SeriesSchema()
 season_schema = SeasonSchema()
 episode_schema = EpisodeSchema()
-movie_schame = MovieSchema()
+movie_schema = MovieSchema()
 
 
 # we need to upload a file
 # this is the simplest way I could do it
 @media_api.route("/upload/media", methods=["POST"])
 def upload_media():
-    media_files = request.files.getlist('file[]')
-    print(media_files)
+    print(request.files)
+    media_files = request.files
 
-    for media_file in media_files:
+    for i, f in enumerate(request.files):
+        media_file = request.files[f]
+
         # print(media_file)
 
         filename = secure_filename(media_file.filename)
@@ -40,9 +42,16 @@ def upload_media():
             
     return "finished"
     
-@media_api.route("/stream/<path:video_path>", methods=["GET"])
-def get_file(video_path):
-    return send_from_directory(os.path.join(current_app.root_path, 'uploads/shows/futurama/1/'), 'futurama.s1e1.mp4')
+@media_api.route("/stream/<int:media_id>", methods=["GET"])
+def get_file(media_id):
+    media = Episode.query.get(media_id)
+    print('###############################')
+    print(media.media_type)
+    print('################################')
+    if media.media_type == "Episode":
+        return send_from_directory(os.path.join(current_app.root_path, media.path.rsplit('/', 1)[0]), media.path.rsplit('/', 1)[1])
+    else:
+        return send_from_directory(os.path.join(current_app.root_path, 'uploads/movies'), media.path)
 
 
 rest_api = Api(media_api)
@@ -55,7 +64,7 @@ class Shows(Resource):
 
         results = Series.query.all()
         series = series_schema.dump(results, many=True).data
-        return jsonify({"series": series})
+        return jsonify(series)
         
 class Seasons(Resource):
     
@@ -63,28 +72,35 @@ class Seasons(Resource):
         
         results = Season.query.filter_by(series=series_id).all()
         seasons = season_schema.dump(results, many=True).data
-        return jsonify({"seasons": seasons})
+        return jsonify(seasons)
         
 class SeasonObj(Resource):
     def get(self, season_id):
         results = Season.query.get(season_id)
         season = season_schema.dump(results).data
-        return jsonify({'season':season})
+        return jsonify(season)
         
 class Episodes(Resource):
     def get(self, season_id):
         results = Episode.query.filter_by(season=season_id)
         print(results[0].title)
         episodes = episode_schema.dump(results, many=True).data
-        return jsonify({'episodes': episodes})
+        return jsonify(episodes)
         
-class EpisodeObj(Resource):
+class MediaObj(Resource):
     
-    def get(self, episode_id):
+    def get(self, media_id):
         
-        results = Episode.query.get(episode_id)
-        episode = episode_schema.dump(results).data
-        return jsonify({"episode": episode})
+        results = Episode.query.get(media_id)
+        media = episode_schema.dump(results).data
+        return jsonify(media)
+        
+class Movies(Resource):
+    
+    def get(self):
+        results = Movie.query.with_polymorphic ([Movie]).filter_by(media_type='Movie').all()
+        movies = movie_schema.dump(results, many=True).data
+        return jsonify(movies)
 
 
 
@@ -93,6 +109,7 @@ rest_api.add_resource(Shows, '/shows')
 rest_api.add_resource(Seasons, '/seasons/<int:series_id>')
 rest_api.add_resource(SeasonObj, '/season/<int:season_id>')
 rest_api.add_resource(Episodes, '/episodes/<int:season_id>')
-rest_api.add_resource(EpisodeObj, '/episode/<int:episode_id>')
+rest_api.add_resource(MediaObj, '/serve/<int:media_id>')
+rest_api.add_resource(Movies, '/movies')
 
 
