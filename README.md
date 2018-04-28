@@ -18,29 +18,26 @@ inside of the repository you will find the following structure
 
 ```
 .
-├── app 
-│   ├── api # all of the api logic
-│   │   ├── db_functs.py # functions used to interact with the database
-│   │   ├── __init__.py
-│   │   ├── models.py # the movie/episode models
-│   │   ├── __pycache__
-│   │   ├── tmdb_funcs.py # functions to interact with the movie database
-│   │   ├── upload.py # functions that upload the media types
-│   │   └── views.py # functions that return something to the client
-│   ├── front_end # maybe where the front end will live
+├── README.md
+├── __pycache__
+├── app
 │   ├── __init__.py
-│   ├── mod_auth # handling authorization
+│   ├── __pycache__
+│   ├── api # all of the api logic
 │   │   ├── __init__.py
-│   │   ├── models.py # User models
-│   │   ├── __pycache__
-│   │   └── views.py # authentication views
-│   └── __pycache__
+│   │   ├── db_functs.py # functions used to interact with the database
+│   │   ├── models.py # models for media 
+│   │   ├── tmdb_funcs.py # functions that interact with the movie database
+│   │   ├── upload.py # function that uploads the files to the server
+│   │   └── views.py # function that return something to the server
+│   ├── db_base.py # ties the various models files together
+│   ├── mod_auth # handles authorization
+│   │   ├── __init__.py
+│   │   ├── models.py # holds user models
+│   │   └── views.py # send out the token
+│   └── secrets.py # holds our secrets (not in the repository)
 ├── config.py 
-├── db.sqlite # the database (should not be committed)
-├── __pycache__ 
-├── README.md # This README
-├── requirements.txt # the dependencies of the project
+├── db.sqlite (should not be committed)
+├── requirements.txt
 └── run.py
-
-8 directories, 15 files
 ```
