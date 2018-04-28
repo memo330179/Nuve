@@ -43,7 +43,7 @@ def upload_media():
     return "finished"
     
 @media_api.route("/stream/<int:media_id>", methods=["GET"])
-def get_file(media_id):
+def stream_file(media_id):
     media = Episode.query.get(media_id)
     print('###############################')
     print(media.media_type)

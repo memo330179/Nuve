@@ -5,10 +5,10 @@ from urllib.error import HTTPError
 try:
     from app import secrets
 except ImportError:
-    print("Trying to get API from Settings")
-    from django.conf import settings
+    print("The secret file does not exist")
 
 
+# import and test the movie database 
 try:
     tmdb.API_KEY = secrets.TMDB_API_KEY
     print(("using API KEY", tmdb.API_KEY))
@@ -21,13 +21,9 @@ except HTTPError:
         movie.info()
     except HTTPError:
         raise NoAPIKeyFound('No API key was found in setting on in the secret file')
-# functions that help to add movies will go here
 
 
 def guess_name(filename):
-    """ Gets title and type of file.
-        It will be useful when trying to upload
-        folders of files"""
     movie_info = guessit(filename)
     return movie_info
 
